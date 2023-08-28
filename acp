@@ -1,0 +1,38 @@
+#!/bin/bash
+# Copy files based on indices
+
+files=()
+count=0
+
+# check if no file was specified
+if [ $# -eq 0 ]; then
+	echo -e "\e[94mPlease specify a file or files to remove \e[33m:O\e[0m"
+	exit 1
+fi
+
+# store all the files of the current directory in an array
+for file in *; do
+  files+=("$file")
+  count=$((count+1))
+done
+
+# Initialize an empty string
+arguments=""
+
+# Loop through the command line arguments and concatenate them
+for arg in "$@"; do
+  if [[ $arg =~ ^[0-9]+$ ]]; then
+    arguments+=" ${files[$arg]}"
+  else
+	echo -e "\e[94mOnly file indices allowed \e[33m:(\e[0m"
+	exit 1
+  fi
+done
+
+#check if there were valid indces specified
+if [[ $arguments =~ ^[[:space:]]*$ ]]; then
+  echo -e "\e[94mFile index out of range \e[33m:/\e[0m"
+else
+  cp $arguments
+fi
+
